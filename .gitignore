@@ -1,0 +1,9 @@
+out/
+media/
+*.mp4
+*.wav
+*.png
+!docs/**/*.png
+__pycache__/
+*.egg-info/
+.pytest_cache/

@@ -1,0 +1,27 @@
+{
+  "name": "LUMEN",
+  "kicker": "INTRODUCING",
+  "hero_a": "See in the",
+  "hero_b": "dark.",
+  "body": "A camera that finds light where there is none. No flash. No compromise.",
+  "features": [
+    ["Night engine", "Computational capture down to 0.02 lux. No flash, no noise, no excuses."],
+    ["Zero-lag focus", "Locks in twelve milliseconds and tracks faces through total darkness."],
+    ["One-tap cinema", "Nine looks calibrated by colourists. Not filters, not luck."]
+  ],
+  "product_label": "THE CAMERA",
+  "product_a": "It sees what",
+  "product_b": "you can't.",
+  "product_body": "A full-frame sensor, a new image pipeline, and an interface that gets out of the way.",
+  "stat_value": 0.02,
+  "stat_unit": "lux",
+  "stat_label": "MINIMUM ILLUMINATION",
+  "stat_note": "Streetlight off. Still recording.",
+  "tagline": "See in the dark.",
+  "url": "lumen.app",
+  "cta": "AVAILABLE 2026",
+  "accent": "#FFB26B",
+  "accent2": "#6C7BFF",
+  "bg": "#07070A",
+  "ink": "#F4F1E9"
+}
