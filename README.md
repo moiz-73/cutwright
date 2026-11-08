@@ -10,6 +10,15 @@ cw edit raw/*.mp4 -o out/cut.mp4 --target 30               # remove dead air, ti
 
 ![Six frames from the LUMEN launch film](docs/preview.png)
 
+## Demos (rendered from this repo)
+
+| File | What it is | Spec |
+|---|---|---|
+| [lumen-1080.mp4](docs/demos/lumen-1080.mp4) | 21 s launch film, six scenes, synthesised score | 1920×1080 · 30 fps · 165 s to render on 2 vCPU |
+| [edit-demo.mp4](docs/demos/edit-demo.mp4) | three source clips cut to 11.07 s — silences removed, single encode, mastered | 1920×1080 · 30 fps · 5 segments |
+
+Both pass `cw qc` (dead air, freezes, −14 LUFS, true peak, exact frame count).
+
 ---
 
 ## Why this exists
