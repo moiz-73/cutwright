@@ -14,8 +14,10 @@ cw edit raw/*.mp4 -o out/cut.mp4 --target 30               # remove dead air, ti
 
 | File | What it is | Spec |
 |---|---|---|
-| [lumen-1080.mp4](docs/demos/lumen-1080.mp4) | 21 s launch film, six scenes, synthesised score | 1920×1080 · 30 fps · 165 s to render on 2 vCPU |
-| [edit-demo.mp4](docs/demos/edit-demo.mp4) | three source clips cut to 11.07 s — silences removed, single encode, mastered | 1920×1080 · 30 fps · 5 segments |
+| [lumen-1080.mp4](docs/demos/lumen-1080.mp4) | 21 s launch film, six scenes, synthesised score | 1920×1080 · 30 fps · 630 frames |
+| [hyper-1080.mp4](docs/demos/hyper-1080.mp4) | 9.5 s 3D sting: grid, fly-in, four beat-locked cards | 1920×1080 · 120 BPM · 285 frames |
+| [edit-demo.mp4](docs/demos/edit-demo.mp4) | three source clips cut to 11.07 s — silences removed, single encode | 5 segments · mastered |
+| [beatcut.mp4](docs/demos/beatcut.mp4) | 12 shots cut on a 129 BPM grid | 11.15 s · beat montage |
 
 Both pass `cw qc` (dead air, freezes, −14 LUFS, true peak, exact frame count).
 
@@ -66,7 +68,14 @@ Not filters. These:
 5. **Sound design as a first-class layer.** Whooshes, impacts, risers and ticks
    are synthesised with numpy and placed on exact frames, then mastered to
    −14 LUFS / −1.5 dBTP. No sample licences, no third-party music.
-6. **Quality gates.** `cw qc` checks dimensions, exact duration, mid-roll black
+6. **Real 3D, not `rotateY`.** `threed.py` projects geometry itself: perspective
+   planes, flat-shaded meshes, floor grids and — the useful trick — *vector text
+   drawn through a projective matrix*, so type stays sharp in depth while the
+   camera moves. No browser, no GPU, no GL context.
+7. **Cuts on the beat.** `beats.py` finds tempo with spectral flux and
+   autocorrelation, then fits `t_i = a + i·T` by least squares over every onset
+   (a comb grid put a 128 BPM click at 129.2; the fit put it at 128.18).
+8. **Quality gates.** `cw qc` checks dimensions, exact duration, mid-roll black
    spans (head/tail fades are allowed), freezes, integrated loudness, true peak
    and file weight. A render that fails is not a deliverable.
 
@@ -122,6 +131,26 @@ Stills for review, without encoding a full film:
 cw launch --spec examples/lumen.json --still 3.3,7.4,12.6,19.4 --out out/frame.png
 ```
 
+### 3D sting
+
+```bash
+cw hyper --out out/hyper.mp4
+```
+
+Nine and a half seconds at 120 BPM: a grid floor rushing to a vanishing point, a
+camera fly-in that lands on a 3D wordmark, four beat-locked cards, then the mark
+again in perspective with a synthesised score hit on every beat.
+
+### Beat cuts
+
+```bash
+cw beats track.mp3                      # tempo + first beats, no dependencies
+cw edit a.mp4 b.mov -o out/montage.mp4 --beats track.mp3 --cut-every 2
+```
+
+The second command cuts the montage on the music's beat grid instead of on
+silence, one shot every two beats, cycling sources.
+
 ### Footage
 
 ```bash
@@ -147,6 +176,9 @@ cw qc out/cut.mp4 --expect '{"width":1080,"height":1920,"loudness":-14}'
 | Finishing chain (grade+bloom+chromatic+vignette) | ~31 ms |
 | 21 s film, 630 frames × 3 sub-frames, CRF 16 | **166 s** (7.9× real-time for 1080p30) |
 | Output | 1080p30 H.264 High, ≈11 Mbps at CRF 16, 29 MB |
+| 3D sting (HYPERCUT), 285 frames × 3 sub-frames | 560 s — grid + streaks + perspective text are the cost |
+| Footage auto-edit (18 s → 11.07 s) | 38 s |
+| Beat montage (26 beats → 12 shots, 11.15 s) | 44 s |
 | UI-only frame (no footage) | ~5 ms |
 
 The whole 21 s master is cheaper than one 5 s clip from a hosted video model
@@ -179,5 +211,8 @@ src/cutwright/
   produce a finished film.
 - Everything is CPU. On 2 cores a 21 s film takes ~3 minutes; on a normal
   workstation it is under a minute.
+
+The full evidence behind these choices — plugin audit, skill installs, filter
+benchmarks, 3D feasibility — is in [docs/RESEARCH.md](docs/RESEARCH.md).
 
 MIT.

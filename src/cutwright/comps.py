@@ -168,7 +168,7 @@ class LaunchFilm:
             a = motion.clamp((u - 0.45) / 0.6)
             bx = W * 0.655
             self._rule(r, bx, H * 0.395, 46 * a, self.th.ink, 0.30, 1.0)
-            r.paragraph(self.sp.body, bx, H * 0.435, W * 0.0158, W * 0.275, "sans", 400, self.th.muted, 0.95 * a, 1.55)
+            r.paragraph(self.sp.body, bx, H * 0.435, W * 0.0176, W * 0.290, "sans", 400, self.th.muted, 0.95 * a, 1.55)
 
         if u > 0.85:
             a = motion.clamp((u - 0.85) / 0.6)
@@ -196,7 +196,7 @@ class LaunchFilm:
             r.text(f"0{i+1}", m, y + H * 0.030, H * 0.0155, "mono", 600, self.th.accent, a, tracking=0.12)
             tx = m + W * 0.055 + (1 - e) * 26
             r.text(title, tx, y + H * 0.040, H * 0.052, "display", 800, self.th.ink, a, tracking=-0.018)
-            r.paragraph(desc, W * 0.505 + (1 - e) * 18, y - H * 0.020, W * 0.0142, W * 0.34, "sans", 400, self.th.muted, 0.85 * a, 1.55)
+            r.paragraph(desc, W * 0.505 + (1 - e) * 18, y - H * 0.020, W * 0.0160, W * 0.34, "sans", 400, self.th.muted, 0.85 * a, 1.55)
             r.text("→", W - m - W * 0.012, y + H * 0.040, H * 0.030, "mono", 400, self.th.ink, 0.35 * a, align="right")
             if i == 0:
                 uw = 120 * motion.out_expo(motion.clamp((u - start - 0.25) / 0.8))
@@ -215,7 +215,7 @@ class LaunchFilm:
                     r.text(line, m, H * (0.365 + i * 0.115), s, "display", 800, self.th.ink, 1.0, tracking=-0.022)
         if u > 0.55:
             a = motion.clamp((u - 0.55) / 0.6)
-            r.paragraph(self.sp.product_body, m, H * 0.655, W * 0.0142, W * 0.30, "sans", 400, self.th.muted, 0.9 * a, 1.55)
+            r.paragraph(self.sp.product_body, m, H * 0.655, W * 0.0160, W * 0.30, "sans", 400, self.th.muted, 0.9 * a, 1.55)
             r.text("EXPLORE  →", m, H * 0.815, H * 0.015, "mono", 600, self.th.ink, 0.75 * a, tracking=0.18)
 
         # device card
@@ -302,7 +302,7 @@ class LaunchFilm:
         vw = r.text_width(f"{val:.2f}", s, "display", 800, -0.045)
         r.text(self.sp.stat_unit, m + vw + 18, H * 0.56, H * 0.045, "serif-i", 400, self.th.accent, 0.95)
         r.line(m, H * 0.625, m + self.content * 0.92, H * 0.625, self.th.ink, 1.0, 0.14)
-        r.paragraph(self.sp.stat_note, m, H * 0.675, W * 0.0165, W * 0.32, "serif-i", 400, self.th.muted, 0.9, 1.35)
+        r.paragraph(self.sp.stat_note, m, H * 0.675, W * 0.0176, W * 0.32, "serif-i", 400, self.th.muted, 0.9, 1.35)
         if u > 0.35:
             a = motion.clamp((u - 0.35) / 0.7)
             rx = W * 0.735

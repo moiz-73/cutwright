@@ -79,6 +79,33 @@ def _cmd_launch(args) -> int:
     return 0
 
 
+def _cmd_hyper(args) -> int:
+    from .hyper import HyperFilm
+    from .render import RenderSettings, render_frames, render_still
+    from .theme import Format
+
+    fmt = Format(args.width, args.height, args.fps)
+    film = HyperFilm(fmt)
+    if args.still:
+        for t in [float(x) for x in args.still.split(",")]:
+            p = f"{args.out.rsplit('.', 1)[0]}-{t:05.2f}.png"
+            render_still(film.draw, p, t, fmt.width, fmt.height)
+            print(p)
+        return 0
+    settings = RenderSettings(
+        fps=fmt.fps, motion_blur=args.motion_blur, shutter=args.shutter,
+        crf=args.crf, preset=args.preset, grain=args.grain,
+    )
+    audio_path = None
+    if not args.no_audio:
+        audio_path = str(Path(tempfile.mkdtemp()) / "score.wav")
+        film.soundtrack().write(audio_path)
+    render_frames(film.draw, args.out, film.duration, fmt.width, fmt.height, settings,
+                  audio_path=audio_path, verbose=not args.quiet)
+    print(json.dumps({"out": args.out, "duration": film.duration}))
+    return 0
+
+
 def _cmd_edit(args) -> int:
     from . import edit
 
@@ -96,10 +123,25 @@ def _cmd_edit(args) -> int:
         preset=args.preset,
         loudness=args.loudness,
     )
-    segs = edit.plan(args.inputs, opt)
+    if args.beats:
+        from . import beats as beatmod
+
+        info = beatmod.analyze(args.beats)
+        segs = edit.plan_beats(args.inputs, info["beats"], args.cut_every)
+        print(f"beat montage: {info['bpm']} BPM, {len(info['beats'])} beats, {len(segs)} shots", file=sys.stderr)
+    else:
+        segs = edit.plan(args.inputs, opt)
     print(f"planned {len(segs)} segments, {sum(s.duration for s in segs):.2f}s -> {args.out}", file=sys.stderr)
     manifest = edit.render(segs, args.out, opt)
     print(json.dumps({"out": args.out, "segments": len(segs), "duration": manifest["duration"]}))
+    return 0
+
+
+def _cmd_beats(args) -> int:
+    from . import beats
+
+    r = beats.analyze(args.file)
+    print(json.dumps({"bpm": r["bpm"], "beats": len(r["beats"]), "first": [round(x, 3) for x in r["beats"][:8]]}, indent=2))
     return 0
 
 
@@ -148,6 +190,21 @@ def build_parser() -> argparse.ArgumentParser:
     l.add_argument("--quiet", action="store_true")
     l.set_defaults(func=_cmd_launch)
 
+    h = sub.add_parser("hyper", help="render the beat-locked 3D sting")
+    h.add_argument("--out", default="out/hyper.mp4")
+    h.add_argument("--width", type=int, default=1920)
+    h.add_argument("--height", type=int, default=1080)
+    h.add_argument("--fps", type=int, default=30)
+    h.add_argument("--crf", type=int, default=17)
+    h.add_argument("--preset", default="medium")
+    h.add_argument("--motion-blur", type=int, default=3)
+    h.add_argument("--shutter", type=float, default=0.5)
+    h.add_argument("--grain", type=float, default=4.0)
+    h.add_argument("--still")
+    h.add_argument("--no-audio", action="store_true")
+    h.add_argument("--quiet", action="store_true")
+    h.set_defaults(func=_cmd_hyper)
+
     e = sub.add_parser("edit", help="auto-edit footage")
     e.add_argument("inputs", nargs="+")
     e.add_argument("-o", "--out", default="out/edit.mp4")
@@ -163,7 +220,13 @@ def build_parser() -> argparse.ArgumentParser:
     e.add_argument("--min-clip", type=float, default=0.45)
     e.add_argument("--target", type=float, default=None)
     e.add_argument("--loudness", type=float, default=-14.0)
+    e.add_argument("--beats", help="audio file: cut the montage on its beat grid")
+    e.add_argument("--cut-every", type=int, default=2, help="beats per shot (with --beats)")
     e.set_defaults(func=_cmd_edit)
+
+    bt = sub.add_parser("beats", help="detect tempo and beats in an audio file")
+    bt.add_argument("file")
+    bt.set_defaults(func=_cmd_beats)
 
     pr = sub.add_parser("probe", help="inspect a media file")
     pr.add_argument("file")

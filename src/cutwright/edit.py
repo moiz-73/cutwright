@@ -88,6 +88,27 @@ def plan_for(path: str, opt: EditOptions) -> list[Segment]:
     return segs
 
 
+def plan_beats(sources: list[str], beat_times: list[float], every: int = 2) -> list[Segment]:
+    """Montage: one shot per `every` beats, cycling sources, cuts on the grid."""
+    if not beat_times or len(beat_times) < every + 1:
+        raise ValueError("not enough beats detected")
+    infos = {s: probe(s) for s in sources}
+    cursors = {s: 0.0 for s in sources}
+    segs: list[Segment] = []
+    for i in range(0, len(beat_times) - every, every):
+        a, b = beat_times[i], beat_times[i + every]
+        dur = min(1.2, max(0.18, b - a))
+        src = sources[(i // every) % len(sources)]
+        total = infos[src]["duration"]
+        if total <= dur:
+            segs.append(Segment(src, 0.0, total))
+            continue
+        start = cursors[src] % max(0.01, total - dur)
+        segs.append(Segment(src, start, start + dur))
+        cursors[src] = start + dur + 0.05
+    return segs
+
+
 def plan(sources: list[str], opt: EditOptions) -> list[Segment]:
     segs: list[Segment] = []
     for s in sources:
