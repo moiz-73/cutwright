@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cutwright — demos</title>
+<style>
+  :root { --bg:#07070A; --ink:#F4F1E9; --muted:#9A9AA4; --accent:#FFB26B; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:16px/1.55 -apple-system, "Inter", "Segoe UI", system-ui, sans-serif; }
+  header { padding:56px 6vw 24px; }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%;
+         background:var(--accent); margin-right:10px; vertical-align:middle; }
+  h1 { font-size:clamp(28px,4vw,44px); letter-spacing:-.02em; margin:0 0 8px; }
+  p.lede { color:var(--muted); max-width:62ch; margin:0; }
+  main { padding:0 6vw 72px; display:grid; gap:40px; }
+  @media (min-width:900px){ main { grid-template-columns:1fr 1fr; } }
+  figure { margin:0; }
+  video { width:100%; aspect-ratio:16/9; background:#0d0d11; border-radius:14px;
+          border:1px solid #1e1e26; display:block; }
+  figcaption { margin-top:12px; }
+  .t { font-weight:600; letter-spacing:-.01em; }
+  .m { color:var(--muted); font-size:14px; margin-top:2px; }
+  code { color:var(--accent); font-size:13px; }
+  footer { padding:0 6vw 64px; color:var(--muted); font-size:14px; }
+  a { color:var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="dot"></span>cutwright demos</h1>
+  <p class="lede">Rendered by the engine in this repository on CPU only — no browser, no GPU,
+  no API calls. Each file below passes <code>cw qc</code>: dead air, freezes, loudness, true peak
+  and exact frame count.</p>
+</header>
+
+<main>
+  <figure>
+    <video controls playsinline preload="metadata" src="demos/lumen-1080.mp4"></video>
+    <figcaption>
+      <div class="t">LUMEN — launch film</div>
+      <div class="m">21 s · 1920×1080 · 30 fps · six scenes · −14.5 LUFS</div>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <video controls playsinline preload="metadata" src="demos/hyper-1080.mp4"></video>
+    <figcaption>
+      <div class="t">HYPERCUT — 3D sting</div>
+      <div class="m">9.5 s · 120 BPM · perspective grid, fly-in, beat-locked cards</div>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <video controls playsinline preload="metadata" src="demos/edit-demo.mp4"></video>
+    <figcaption>
+      <div class="t">Footage auto-edit</div>
+      <div class="m">18 s of source → 11.07 s · silences removed · one encode</div>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <video controls playsinline preload="metadata" src="demos/beatcut.mp4"></video>
+    <figcaption>
+      <div class="t">Beat montage</div>
+      <div class="m">12 shots cut on a 129 BPM grid · 11.15 s</div>
+    </figcaption>
+  </figure>
+</main>
+
+<footer>
+  Source and research notes: <a href="https://github.com/moiz-73/cutwright">github.com/moiz-73/cutwright</a>
+  · <a href="https://github.com/moiz-73/cutwright/blob/main/docs/RESEARCH.md">docs/RESEARCH.md</a>
+</footer>
+</body>
+</html>
