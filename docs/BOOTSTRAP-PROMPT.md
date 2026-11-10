@@ -305,9 +305,8 @@ the human should type next.
 
 ## Notes for the human (not part of the prompt)
 
-- **Repo visibility:** Phase 2 clones `https://github.com/moiz-73/cutwright`. That repository is
-  currently **private**; make it public before running, or replace the clone line with a
-  `git clone` URL the friend can reach. Nothing else in the setup depends on a private resource.
+- **Repo:** Phase 2 clones `https://github.com/moiz-73/cutwright`, which is **public** — no token
+  needed. If you fork it, replace the URL with your fork.
 - **Plan:** on E2B Hobby the box can run 1 h continuously; it pauses and resumes transparently, so
   normal use is unaffected. A long single render (over an hour) needs Pro or a pause/resume chunking
   step.
