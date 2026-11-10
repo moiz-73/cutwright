@@ -212,6 +212,9 @@ src/cutwright/
 - Everything is CPU. On 2 cores a 21 s film takes ~3 minutes; on a normal
   workstation it is under a minute.
 
+Want this on another machine, with the rendering in an E2B cloud sandbox driven by opencode?
+Paste [docs/BOOTSTRAP-PROMPT.md](docs/BOOTSTRAP-PROMPT.md) into a coding agent and fill one key.
+
 The full evidence behind these choices — plugin audit, skill installs, filter
 benchmarks, 3D feasibility — is in [docs/RESEARCH.md](docs/RESEARCH.md).
 
